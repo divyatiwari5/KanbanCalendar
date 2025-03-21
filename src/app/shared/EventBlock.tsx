@@ -1,6 +1,7 @@
 'use client';
 
 import type { CalendarEvent } from '@/app/mockData/eventData';
+import Image from 'next/image';
 
 interface EventBlockProps {
   event: CalendarEvent;
@@ -30,29 +31,30 @@ const EventBlock = ({ event, hourHeight }: EventBlockProps) => {
   };
 
   const { top, height } = getEventPosition();
-  const bgColors = [
-    'bg-blue-500',
-    'bg-green-500',
-    'bg-purple-500',
-    'bg-orange-500',
-    'bg-pink-500'
-  ];
-  // Generate a consistent color based on event ID
-  const colorIndex = parseInt(event.id.replace('event-', '')) % bgColors.length;
-  const bgColor = bgColors[colorIndex];
 
   return (
     <div
-      className={`absolute w-11/12 left-1/2 -translate-x-1/2 rounded-lg ${bgColor} bg-opacity-90 pointer-events-auto cursor-pointer group hover:bg-opacity-100 z-10`}
+      className="absolute w-11/12 left-1/2 -translate-x-1/2 rounded-lg bg-blue-600 bg-opacity-90 pointer-events-auto cursor-pointer group hover:bg-opacity-100 z-10 overflow-hidden"
       style={{
         top: `${top}px`,
         height: `${height}px`,
       }}
     >
-      <div className="p-2 text-white text-sm">
-        <div className="font-semibold truncate">{event.title}</div>
-        <div className="text-xs opacity-90 group-hover:opacity-100">
-          {event.time}
+      <div className="flex h-full p-2">
+        <div className="relative h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden">
+          <Image 
+            src={event.imageUrl} 
+            alt={event.title}
+            fill
+            className="object-cover"
+            sizes="48px"
+          />
+        </div>
+        <div className="flex-1 ml-2 text-white text-sm">
+          <div className="font-semibold truncate">{event.title}</div>
+          <div className="text-xs opacity-75 truncate mt-1">
+            {event.description}
+          </div>
         </div>
       </div>
     </div>
