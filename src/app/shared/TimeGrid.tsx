@@ -5,19 +5,25 @@ interface TimeGridProps {
 }
 
 const TimeGrid = ({ hourHeight = 60 }: TimeGridProps) => {
+  const formatHour = (hour: number) => {
+    if (hour === 0) return '12 AM';
+    if (hour === 12) return '12 PM';
+    return hour < 12 ? `${hour} AM` : `${hour - 12} PM`;
+  };
+
   return (
-    <div className="h-[calc(100vh-120px)] overflow-y-auto">
-      <div className="flex">
+    <div className="absolute inset-0">
+      <div className="flex relative">
         {/* Time labels column */}
-        <div className="w-16 relative" style={{ height: `${hourHeight * 24}px` }}>
+        <div className="w-16 sticky left-0 bg-white z-20">
           {Array.from({ length: 24 }, (_, i) => (
             <div 
               key={i}
-              className="absolute w-full text-right pr-4"
-              style={{ top: `${i * hourHeight}px` }}
+              className="h-[60px] flex items-center justify-end pr-4"
+              style={{ height: `${hourHeight}px` }}
             >
               <span className="text-sm text-gray-500">
-                {`${i.toString().padStart(2, '0')}:00`}
+                {formatHour(i)}
               </span>
             </div>
           ))}
@@ -29,13 +35,12 @@ const TimeGrid = ({ hourHeight = 60 }: TimeGridProps) => {
             <div 
               key={dayIndex} 
               className="relative border-l"
-              style={{ height: `${hourHeight * 24}px` }}
             >
               {Array.from({ length: 24 }, (_, i) => (
                 <div 
                   key={i}
-                  className="absolute w-full border-t border-gray-200"
-                  style={{ top: `${i * hourHeight}px` }}
+                  className="border-t border-gray-200"
+                  style={{ height: `${hourHeight}px` }}
                 />
               ))}
             </div>

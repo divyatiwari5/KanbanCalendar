@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { format, startOfWeek, addDays, isToday } from "date-fns";
 import DayHeader, { DayHeaderProps } from "./DayHeader";
-import { addWeeks, format, startOfWeek, addDays, isToday } from "date-fns";
 
-const CalendarHeader = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+interface CalendarHeaderProps {
+  currentDate: Date;
+  onPrevWeek: () => void;
+  onNextWeek: () => void;
+}
 
+const CalendarHeader = ({ currentDate, onPrevWeek, onNextWeek }: CalendarHeaderProps) => {
   const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
     const days: DayHeaderProps[] = [];
     const start = startOfWeek(startDate, { weekStartsOn: 0 });
@@ -22,29 +25,22 @@ const CalendarHeader = () => {
     return days;
   };
 
-  const handlePrevWeek = () => {
-    setCurrentDate((prev) => addWeeks(prev, -1));
-  };
-
-  const handleNextWeek = () => {
-    setCurrentDate((prev) => addWeeks(prev, 1));
-  };
-
   const days = generateWeekDays(currentDate);
+  const currentMonth = format(currentDate, 'MMMM yyyy');
 
   return (
     <div className="bg-blue-500 text-white p-4 rounded-lg">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl">Your Schedule</h2>
+        <h2 className="text-xl">Your Schedule {currentMonth}</h2>
         <div className="flex gap-2">
           <button
-            onClick={handlePrevWeek}
+            onClick={onPrevWeek}
             className="p-2 hover:bg-blue-600 rounded-full transition-colors"
           >
             ←
           </button>
           <button
-            onClick={handleNextWeek}
+            onClick={onNextWeek}
             className="p-2 hover:bg-blue-600 rounded-full transition-colors"
           >
             →
