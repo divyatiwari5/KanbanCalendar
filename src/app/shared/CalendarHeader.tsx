@@ -47,15 +47,20 @@ const CalendarHeader = ({ currentDate, onPrevWeek, onNextWeek }: CalendarHeaderP
           </button>
         </div>
       </div>
-      <div className="flex justify-between">
-        {days.map((day) => (
-          <DayHeader
-            key={`${day.date}-${day.day}`}
-            date={day.date}
-            day={day.day}
-            isToday={day.isToday}
-          />
-        ))}
+      <div className="flex">
+        {/* Time gutter space */}
+        <div className="w-16"></div>
+        {/* Days grid */}
+        <div className="flex-1 grid grid-cols-7">
+          {days.map((day) => (
+            <DayHeader
+              key={`${day.date}-${day.day}`}
+              date={day.date}
+              day={day.day}
+              isToday={day.isToday}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
