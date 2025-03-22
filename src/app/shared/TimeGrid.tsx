@@ -15,7 +15,7 @@ const TimeGrid = ({ hourHeight = 60 }: TimeGridProps) => {
     <div className="absolute inset-0">
       <div className="flex relative">
         {/* Time labels column */}
-        <div className="w-16 sticky left-0 bg-white z-20">
+        <div className="w-16 sticky left-0 bg-[#eef1f9] z-20">
           {Array.from({ length: 24 }, (_, i) => (
             <div 
               key={i}

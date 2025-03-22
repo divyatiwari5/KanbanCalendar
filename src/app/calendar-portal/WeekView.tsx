@@ -1,7 +1,7 @@
 "use client";
 
 import TimeGrid from "@/app/shared/TimeGrid";
-import EventBlock from "@/app/shared/EventBlock";
+import EventBlock from "@/app/calendar-portal/calendar/EventBlock";
 import { startOfWeek, addDays, format } from "date-fns";
 import { events } from "@/app/mockData/eventData";
 
@@ -21,7 +21,7 @@ const WeekView = ({ selectedDate }: WeekViewProps) => {
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 0 });
 
   return (
-    <div className="w-full relative mt-4 border rounded-lg overflow-hidden bg-white">
+    <div className="w-full relative mt-4 border rounded-lg overflow-hidden bg-[#eef1f9]">
       <div className="overflow-y-auto calendar-scroll" style={{ height: "600px" }}>
         <div className="relative" style={{ height: `${hourHeight * 24}px` }}>
           <TimeGrid hourHeight={hourHeight} />

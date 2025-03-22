@@ -29,19 +29,19 @@ const CalendarHeader = ({ currentDate, onPrevWeek, onNextWeek }: CalendarHeaderP
   const currentMonth = format(currentDate, 'MMMM yyyy');
 
   return (
-    <div className="bg-blue-500 text-white p-4 rounded-lg">
+    <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl">Your Schedule {currentMonth}</h2>
         <div className="flex gap-2">
           <button
             onClick={onPrevWeek}
-            className="p-2 hover:bg-blue-600 rounded-full transition-colors"
+            className="p-2 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
           >
             ←
           </button>
           <button
             onClick={onNextWeek}
-            className="p-2 hover:bg-blue-600 rounded-full transition-colors"
+            className="p-2 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
           >
             →
           </button>
