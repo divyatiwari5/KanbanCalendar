@@ -1,30 +1,41 @@
 'use client';
 
 import { useState } from "react";
-import { addWeeks } from "date-fns";
+import { addWeeks, startOfWeek } from "date-fns";
 import CalendarHeader from "@/app/shared/CalendarHeader";
-import WeekView from "../WeekView";
+import WeekView from "../calendar-event/WeekView";
 
 const Calendar = () => {
-  // Initialize with March 21, 2025
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 2, 21));
+  const today = new Date();
+  const [currentDate, setCurrentDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(today);
 
   const handlePrevWeek = () => {
-    setCurrentDate(prev => addWeeks(prev, -1));
+    const newDate = addWeeks(currentDate, -1);
+    setCurrentDate(newDate);
+    setSelectedDate(startOfWeek(newDate));
   };
 
   const handleNextWeek = () => {
-    setCurrentDate(prev => addWeeks(prev, 1));
+    const newDate = addWeeks(currentDate, 1);
+    setCurrentDate(newDate);
+    setSelectedDate(startOfWeek(newDate));
+  };
+
+  const handleDaySelect = (date: Date) => {
+    setSelectedDate(date);
   };
 
   return (
     <div className="flex flex-col h-full">
       <CalendarHeader 
         currentDate={currentDate}
+        selectedDate={selectedDate}
         onPrevWeek={handlePrevWeek}
         onNextWeek={handleNextWeek}
+        onDaySelect={handleDaySelect}
       />
-      <WeekView selectedDate={currentDate} />
+      <WeekView selectedDate={selectedDate} />
     </div>
   );
 };
