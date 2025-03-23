@@ -17,7 +17,7 @@ const WeekView = ({ selectedDate }: WeekViewProps) => {
   };
 
   return (
-    <div className="w-full relative mt-4 border rounded-lg overflow-hidden bg-[#eef1f9]">
+    <div className="w-full relative mt-4 rounded-lg overflow-hidden bg-[#eef1f9]">
       <WeekViewMobile events={getSelectedDayEvents()} />
       <WeekViewDesktop selectedDate={selectedDate} events={events} />
     </div>
