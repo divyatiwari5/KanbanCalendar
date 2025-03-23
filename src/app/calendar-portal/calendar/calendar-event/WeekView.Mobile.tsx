@@ -4,23 +4,43 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { CalendarEvent } from '@/app/mockData/eventData';
 import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import EventDetails from './EventDetails';
 
 interface MobileViewProps {
   events: CalendarEvent[];
   selectedDate: Date;
+  onDateChange: (date: Date) => void;
 }
 
-const WeekViewMobile = ({ events, selectedDate }: MobileViewProps) => {
+const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps) => {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [isInitialRender, setIsInitialRender] = useState(true);
   
   const weekId = format(selectedDate, 'yyyy-MM-dd');
 
   return (
-    <div className="md:hidden">
-      <div className="p-4 space-y-4">
+    <motion.div 
+      className="md:hidden"
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.2}
+      onDragEnd={(e, { offset, velocity }) => {
+        const swipe = offset.x + velocity.x * 50;
+        if (Math.abs(swipe) > 50) {
+          if (swipe > 0) {
+            onDateChange(addDays(selectedDate, -1));
+          } else {
+            onDateChange(addDays(selectedDate, 1));
+          }
+        }
+      }}
+    >
+      <motion.div 
+        className="p-4 space-y-4"
+        animate={{ x: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
         {events.length === 0 ? (
           <div className="text-center text-gray-500 py-8">
             No events scheduled for this day
@@ -80,7 +100,7 @@ const WeekViewMobile = ({ events, selectedDate }: MobileViewProps) => {
             </motion.div>
           ))
         )}
-      </div>
+      </motion.div>
 
       <AnimatePresence mode="wait">
         {selectedEvent && (
@@ -92,7 +112,7 @@ const WeekViewMobile = ({ events, selectedDate }: MobileViewProps) => {
           />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
