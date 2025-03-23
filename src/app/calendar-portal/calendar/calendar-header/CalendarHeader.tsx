@@ -1,7 +1,9 @@
 "use client";
 
 import { format, startOfWeek, addDays, isToday } from "date-fns";
-import DayHeader, { DayHeaderProps } from "../calendar-portal/calendar/calendar-header/DayHeader";
+import { DayHeaderProps } from "./DayHeader";
+import CalendarHeaderMobile from "./CalendarHeader.Mobile";
+import CalendarHeaderDesktop from "./CalendarHeader.Desktop";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -11,7 +13,13 @@ interface CalendarHeaderProps {
   selectedDate: Date;
 }
 
-const CalendarHeader = ({ currentDate, onPrevWeek, onNextWeek, onDaySelect, selectedDate }: CalendarHeaderProps) => {
+const CalendarHeader = ({
+  currentDate,
+  onPrevWeek,
+  onNextWeek,
+  onDaySelect,
+  selectedDate,
+}: CalendarHeaderProps) => {
   const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
     const days: DayHeaderProps[] = [];
     const start = startOfWeek(startDate, { weekStartsOn: 0 });
@@ -29,7 +37,7 @@ const CalendarHeader = ({ currentDate, onPrevWeek, onNextWeek, onDaySelect, sele
   };
 
   const days = generateWeekDays(currentDate);
-  const currentMonth = format(currentDate, 'MMMM yyyy');
+  const currentMonth = format(currentDate, "MMMM yyyy");
 
   return (
     <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 rounded-lg">
@@ -54,41 +62,12 @@ const CalendarHeader = ({ currentDate, onPrevWeek, onNextWeek, onDaySelect, sele
         </div>
       </div>
 
-      {/* Mobile View */}
-      <div className="md:hidden grid grid-cols-7 gap-1">
-        {days.map((day) => (
-          <button
-            key={`${day.date}-${day.day}`}
-            onClick={() => onDaySelect?.(day.fullDate)}
-            className={`p-2 rounded-xl transition-all ${
-              format(day.fullDate, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
-                ? 'bg-gradient-to-tr from-indigo-600 to-violet-600'
-                : 'bg-white/10 hover:bg-white/20'
-            }`}
-          >
-            <div className="text-xs font-medium">{day.day}</div>
-            <div className="text-lg font-semibold mt-1">{day.date}</div>
-          </button>
-        ))}
-      </div>
-
-      {/* Desktop View */}
-      <div className="hidden md:flex">
-        {/* Time gutter space */}
-        <div className="w-16"></div>
-        {/* Days grid */}
-        <div className="flex-1 grid grid-cols-7">
-          {days.map((day) => (
-            <DayHeader
-              key={`${day.date}-${day.day}`}
-              date={day.date}
-              day={day.day}
-              isToday={day.isToday}
-              fullDate={day.fullDate}
-            />
-          ))}
-        </div>
-      </div>
+      <CalendarHeaderMobile
+        days={days}
+        selectedDate={selectedDate}
+        onDaySelect={onDaySelect}
+      />
+      <CalendarHeaderDesktop days={days} />
     </div>
   );
 };

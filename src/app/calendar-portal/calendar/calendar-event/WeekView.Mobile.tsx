@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { CalendarEvent } from '@/app/mockData/eventData';
 import { motion, AnimatePresence } from 'framer-motion';
-import EventDetails from '../calendar/EventDetails';
 import { format } from 'date-fns';
+import EventDetails from './EventDetails';
 
 interface MobileViewProps {
   events: CalendarEvent[];

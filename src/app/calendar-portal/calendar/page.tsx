@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { addWeeks, startOfWeek } from "date-fns";
-import CalendarHeader from "@/app/shared/CalendarHeader";
-import WeekView from "../calendar-event/WeekView";
+import CalendarHeader from "./calendar-header/CalendarHeader";
+import WeekView from "./calendar-event/WeekView";
 
 const Calendar = () => {
   const today = new Date();

@@ -1,9 +1,9 @@
 'use client';
 
 import { startOfWeek, addDays, format } from 'date-fns';
-import TimeGrid from '@/app/shared/TimeGrid';
-import EventBlock from '../calendar/EventBlock';
 import { CalendarEvent } from '@/app/mockData/eventData';
+import EventBlock from './EventBlock';
+import TimeGrid from './TimeGrid';
 
 interface DesktopViewProps {
   selectedDate: Date;
