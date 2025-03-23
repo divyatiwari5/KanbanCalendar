@@ -49,19 +49,20 @@ const EventBlock = ({ event, hourHeight, selectedDate }: EventBlockProps) => {
           setIsOpen(true);
         }}
         initial={isInitialRender ? { opacity: 1 } : false}
-        className="absolute w-11/12 left-1/2 -translate-x-1/2 rounded-lg bg-blue-600 bg-opacity-90 pointer-events-auto cursor-pointer group hover:bg-opacity-100 z-10 overflow-hidden"
+        className="absolute w-[calc(100%-8px)] ml-1 rounded-xl bg-white shadow-[0_1px_4px_rgba(0,0,0,0.1)] pointer-events-auto cursor-pointer group hover:shadow-md z-10 overflow-hidden"
         style={{
           top: `${top}px`,
           height: `${height}px`,
         }}
       >
+        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-400 rounded-l-xl" />
         <motion.div 
-          className="flex h-full p-2" 
+          className="flex flex-col h-full pl-3" 
           layoutId={`content-${weekId}-${event.id}`}
           initial={isInitialRender ? { opacity: 1 } : false}
         >
           <motion.div 
-            className="relative h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden"
+            className="relative w-full flex-1"
             layoutId={`image-${weekId}-${event.id}`}
             initial={isInitialRender ? { opacity: 1 } : false}
           >
@@ -70,27 +71,20 @@ const EventBlock = ({ event, hourHeight, selectedDate }: EventBlockProps) => {
               alt={event.title}
               fill
               className="object-cover"
-              sizes="48px"
+              sizes="(max-width: 768px) 100vw, 33vw"
             />
           </motion.div>
           <motion.div 
-            className="flex-1 ml-2 text-white text-sm" 
+            className="py-2" 
             layoutId={`text-${weekId}-${event.id}`}
             initial={isInitialRender ? { opacity: 1 } : false}
           >
             <motion.div 
-              className="font-semibold truncate" 
+              className="font-normal text-[13px] text-gray-900" 
               layoutId={`title-${weekId}-${event.id}`}
               initial={isInitialRender ? { opacity: 1 } : false}
             >
               {event.title}
-            </motion.div>
-            <motion.div 
-              className="text-xs opacity-75 truncate mt-1" 
-              layoutId={`desc-${weekId}-${event.id}`}
-              initial={isInitialRender ? { opacity: 1 } : false}
-            >
-              {event.description}
             </motion.div>
           </motion.div>
         </motion.div>

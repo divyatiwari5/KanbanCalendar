@@ -11,7 +11,7 @@ interface DesktopViewProps {
   hourHeight?: number;
 }
 
-const WeekViewDesktop = ({ selectedDate, events, hourHeight = 60 }: DesktopViewProps) => {
+const WeekViewDesktop = ({ selectedDate, events, hourHeight = 100 }: DesktopViewProps) => {
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 0 });
 
   const getEventsForDay = (date: Date) => {
@@ -25,13 +25,13 @@ const WeekViewDesktop = ({ selectedDate, events, hourHeight = 60 }: DesktopViewP
         <div className="relative" style={{ height: `${hourHeight * 24}px` }}>
           <TimeGrid hourHeight={hourHeight} />
           {/* Events container */}
-          <div className="absolute top-0 left-16 right-0">
-            <div className="grid grid-cols-7 h-full">
+          <div className="absolute top-0 left-20 right-4">
+            <div className="grid grid-cols-7 gap-2 h-full">
               {Array.from({ length: 7 }, (_, dayIndex) => {
                 const currentDay = addDays(weekStart, dayIndex);
                 const dayEvents = getEventsForDay(currentDay);
                 return (
-                  <div key={dayIndex} className="relative h-full border-r last:border-r-0">
+                  <div key={dayIndex} className="relative h-full border-r last:border-r-0 px-1">
                     {dayEvents.map(event => (
                       <EventBlock 
                         key={event.id}
