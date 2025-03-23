@@ -5,14 +5,18 @@ import type { CalendarEvent } from '@/app/mockData/eventData';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import EventDetails from './EventDetails';
+import { format } from 'date-fns';
 
 interface EventBlockProps {
   event: CalendarEvent;
   hourHeight: number;
+  selectedDate: Date;
 }
 
-const EventBlock = ({ event, hourHeight }: EventBlockProps) => {
+const EventBlock = ({ event, hourHeight, selectedDate }: EventBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+  const weekId = format(selectedDate, 'yyyy-MM-dd');
 
   const getEventPosition = () => {
     // Parse time from "09:00 AM" format
@@ -39,18 +43,27 @@ const EventBlock = ({ event, hourHeight }: EventBlockProps) => {
   return (
     <>
       <motion.div
-        layoutId={`event-${event.id}`}
-        onClick={() => setIsOpen(true)}
+        layoutId={`event-${weekId}-${event.id}`}
+        onClick={() => {
+          setIsInitialRender(false);
+          setIsOpen(true);
+        }}
+        initial={isInitialRender ? { opacity: 1 } : false}
         className="absolute w-11/12 left-1/2 -translate-x-1/2 rounded-lg bg-blue-600 bg-opacity-90 pointer-events-auto cursor-pointer group hover:bg-opacity-100 z-10 overflow-hidden"
         style={{
           top: `${top}px`,
           height: `${height}px`,
         }}
       >
-        <motion.div className="flex h-full p-2" layoutId={`content-${event.id}`}>
+        <motion.div 
+          className="flex h-full p-2" 
+          layoutId={`content-${weekId}-${event.id}`}
+          initial={isInitialRender ? { opacity: 1 } : false}
+        >
           <motion.div 
             className="relative h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden"
-            layoutId={`image-${event.id}`}
+            layoutId={`image-${weekId}-${event.id}`}
+            initial={isInitialRender ? { opacity: 1 } : false}
           >
             <Image 
               src={event.imageUrl} 
@@ -60,20 +73,37 @@ const EventBlock = ({ event, hourHeight }: EventBlockProps) => {
               sizes="48px"
             />
           </motion.div>
-          <motion.div className="flex-1 ml-2 text-white text-sm" layoutId={`text-${event.id}`}>
-            <motion.div className="font-semibold truncate" layoutId={`title-${event.id}`}>
+          <motion.div 
+            className="flex-1 ml-2 text-white text-sm" 
+            layoutId={`text-${weekId}-${event.id}`}
+            initial={isInitialRender ? { opacity: 1 } : false}
+          >
+            <motion.div 
+              className="font-semibold truncate" 
+              layoutId={`title-${weekId}-${event.id}`}
+              initial={isInitialRender ? { opacity: 1 } : false}
+            >
               {event.title}
             </motion.div>
-            <motion.div className="text-xs opacity-75 truncate mt-1" layoutId={`desc-${event.id}`}>
+            <motion.div 
+              className="text-xs opacity-75 truncate mt-1" 
+              layoutId={`desc-${weekId}-${event.id}`}
+              initial={isInitialRender ? { opacity: 1 } : false}
+            >
               {event.description}
             </motion.div>
           </motion.div>
         </motion.div>
       </motion.div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isOpen && (
-          <EventDetails event={event} onClose={() => setIsOpen(false)} />
+          <EventDetails 
+            event={event} 
+            weekId={weekId}
+            onClose={() => setIsOpen(false)} 
+            isInitialRender={isInitialRender}
+          />
         )}
       </AnimatePresence>
     </>

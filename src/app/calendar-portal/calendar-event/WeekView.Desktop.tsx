@@ -37,6 +37,7 @@ const WeekViewDesktop = ({ selectedDate, events, hourHeight = 60 }: DesktopViewP
                         key={event.id}
                         event={event}
                         hourHeight={hourHeight}
+                        selectedDate={currentDay}
                       />
                     ))}
                   </div>
