@@ -43,7 +43,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full py-2.5 px-4">
       <CalendarHeader 
         currentDate={currentDate}
         selectedDate={selectedDate}
