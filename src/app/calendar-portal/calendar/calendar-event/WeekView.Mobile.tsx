@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { CalendarEvent } from '@/app/mockData/eventData';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { format, addDays } from 'date-fns';
 import EventDetails from './EventDetails';
 
@@ -16,8 +16,58 @@ interface MobileViewProps {
 const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps) => {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [isInitialRender, setIsInitialRender] = useState(true);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   
   const weekId = format(selectedDate, 'yyyy-MM-dd');
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.4,
+        delayChildren: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const getItemVariants = (index: number) => ({
+    hidden: { 
+      opacity: 0,
+      scale: 0.8,
+      x: slideDirection === 'left' ? 300 : slideDirection === 'right' ? -300 : 0,
+      rotateX: 20
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      rotateX: 0,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 20,
+        mass: 1,
+        delay: index * 0.4,
+        duration: 1,
+        ease: "easeInOut"
+      }
+    }
+  });
+
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipe = info.offset.x + info.velocity.x * 50;
+    if (Math.abs(swipe) > 50) {
+      if (swipe > 0) {
+        setSlideDirection('left');
+        onDateChange(addDays(selectedDate, -1));
+      } else {
+        setSlideDirection('right');
+        onDateChange(addDays(selectedDate, 1));
+      }
+    }
+  };
 
   return (
     <motion.div 
@@ -25,28 +75,24 @@ const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps)
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.2}
-      onDragEnd={(e, { offset, velocity }) => {
-        const swipe = offset.x + velocity.x * 50;
-        if (Math.abs(swipe) > 50) {
-          if (swipe > 0) {
-            onDateChange(addDays(selectedDate, -1));
-          } else {
-            onDateChange(addDays(selectedDate, 1));
-          }
-        }
-      }}
+      onDragEnd={handleDragEnd}
     >
       <motion.div 
         className="p-4 space-y-4"
-        animate={{ x: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        key={weekId}
       >
         {events.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">
+          <motion.div 
+            className="text-center text-gray-500 py-8"
+            variants={getItemVariants(0)}
+          >
             No events scheduled for this day
-          </div>
+          </motion.div>
         ) : (
-          events.map(event => (
+          events.map((event, index) => (
             <motion.div 
               key={`${weekId}-${event.id}`}
               layoutId={`event-${weekId}-${event.id}`}
@@ -54,7 +100,11 @@ const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps)
                 setIsInitialRender(false);
                 setSelectedEvent(event);
               }}
-              initial={isInitialRender ? { opacity: 1 } : false}
+              variants={getItemVariants(index)}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.3, ease: "easeOut" }
+              }}
               className="bg-white rounded-2xl shadow-sm overflow-hidden cursor-pointer"
             >
               <motion.div 
@@ -72,9 +122,18 @@ const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps)
                     className="w-full h-full object-cover"
                     fill
                   />
-                  <div className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm">
+                  <motion.div 
+                    className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm"
+                    initial={{ opacity: 0, y: -20, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ 
+                      delay: 1 + index * 0.4,
+                      duration: 0.5,
+                      ease: "easeOut"
+                    }}
+                  >
                     {event.time}
-                  </div>
+                  </motion.div>
                 </motion.div>
                 <motion.div 
                   className="p-4" 

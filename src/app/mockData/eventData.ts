@@ -29,6 +29,26 @@ export const events: EventsByDate = {
       time: "02:00 PM",
     },
   ],
+  "2025-03-20": [
+    {
+      id: "event-1",
+      title: "Coffee with Alex",
+      description:
+        "Meet with Alex to brainstorm ideas for the upcoming product launch. We'll review market research and competitor analysis to identify potential opportunities and challenges.",
+      imageUrl:
+        "https://fastly.picsum.photos/id/312/1920/1080.jpg?hmac=OD_fP9MUQN7uJ8NBR7tlii78qwHPUROGgohG4w16Kjw",
+      time: "09:00 AM",
+    },
+    {
+      id: "event-2",
+      title: "Team Standup",
+      description:
+        "Weekly standup meeting with the dev team. Discuss progress, blockers, and align on next week's priorities.",
+      imageUrl:
+        "http://fastly.picsum.photos/id/737/1920/1080.jpg?hmac=aFzER8Y4wcWTrXVx2wVKSj10IqnygaF33gESj0WGDwI",
+      time: "02:00 PM",
+    },
+  ],
   "2025-03-18": [
     {
       id: "event-3",
