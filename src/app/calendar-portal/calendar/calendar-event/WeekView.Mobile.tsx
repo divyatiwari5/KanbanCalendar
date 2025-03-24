@@ -71,14 +71,14 @@ const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps)
 
   return (
     <motion.div 
-      className="md:hidden"
+      className="md:hidden min-h-[calc(100vh-200px)]"
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.2}
       onDragEnd={handleDragEnd}
     >
       <motion.div 
-        className="p-4 space-y-4"
+        className="p-4 space-y-4 h-full"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -86,10 +86,13 @@ const WeekViewMobile = ({ events, selectedDate, onDateChange }: MobileViewProps)
       >
         {events.length === 0 ? (
           <motion.div 
-            className="text-center text-gray-500 py-8"
+            className="flex items-center justify-center text-center text-gray-500 min-h-[calc(100vh-250px)] bg-white rounded-2xl shadow-sm"
             variants={getItemVariants(0)}
           >
-            No events scheduled for this day
+            <div className="p-8">
+              <div className="text-lg font-medium mb-2">No Events</div>
+              <div className="text-sm text-gray-400">Swipe left or right to navigate between days</div>
+            </div>
           </motion.div>
         ) : (
           events.map((event, index) => (
