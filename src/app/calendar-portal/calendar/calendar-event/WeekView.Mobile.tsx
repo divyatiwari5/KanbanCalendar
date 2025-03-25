@@ -194,7 +194,6 @@ const WeekViewMobile = ({
         {selectedEvent && !isDragging && (
           <EventDetails
             event={selectedEvent}
-            weekId={currentDateStr}
             onClose={() => setSelectedEvent(null)}
           />
         )}

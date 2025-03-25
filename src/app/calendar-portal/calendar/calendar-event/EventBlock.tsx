@@ -115,9 +115,7 @@ const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps)
         {isOpen && (
           <EventDetails 
             event={event} 
-            weekId={weekId}
             onClose={() => setIsOpen(false)} 
-            isInitialRender={isInitialRender}
           />
         )}
       </AnimatePresence>

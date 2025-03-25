@@ -6,12 +6,10 @@ import type { CalendarEvent } from '@/app/mockData/eventData';
 
 interface EventDetailsProps {
   event: CalendarEvent;
-  weekId: string;
   onClose: () => void;
-  isInitialRender?: boolean;
 }
 
-const EventDetails = ({ event, weekId, onClose, isInitialRender = false }: EventDetailsProps) => {
+const EventDetails = ({ event, onClose}: EventDetailsProps) => {
   return (
     <>
       <motion.div
