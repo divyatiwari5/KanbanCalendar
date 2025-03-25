@@ -59,7 +59,6 @@ export function useDragToDate({
     if (isDragging) {
       const formatted = format(selectedDate, "yyyy-MM-dd");
       targetDateRef.current = formatted;
-      console.log(`useEffect: Target date updated to: ${formatted} (ref = ${targetDateRef.current})`);
       setShowDropIndicator(true);
     }
   }, [selectedDate, isDragging]);
@@ -102,7 +101,6 @@ export function useDragToDate({
     const event = events.find(e => e.id === eventId) || null;
     setDraggingEvent(event);
     
-    console.log(`Started dragging event: ${eventId} from date ${startDateStr} (refs: start=${startDateRef.current}, target=${targetDateRef.current})`);
   };
   
   // Change date based on screen position during drag
@@ -116,16 +114,13 @@ export function useDragToDate({
     // Make sure we preserve the dragging state
     const currentDragEvent = draggingEvent;
     const currentDragEventId = draggingEventId;
-    const oldTarget = targetDateRef.current;
     
     let newDate: Date;
     if (direction === "prev") {
-      console.log(`Moving to previous day (refs: start=${startDateRef.current}, target=${targetDateRef.current})`);
       setSlideDirection("left");
       newDate = subDays(selectedDate, 1);
       onDateChange(newDate);
     } else {
-      console.log(`Moving to next day (refs: start=${startDateRef.current}, target=${targetDateRef.current})`);
       setSlideDirection("right");
       newDate = addDays(selectedDate, 1);
       onDateChange(newDate);
@@ -134,14 +129,12 @@ export function useDragToDate({
     // Update the target date immediately in the ref
     const newTargetDate = format(newDate, "yyyy-MM-dd");
     targetDateRef.current = newTargetDate;
-    console.log(`DIRECT: Changing targetDateStr from ${oldTarget} to ${newTargetDate} (ref = ${targetDateRef.current})`);
     
     // Ensure we maintain drag state
     setTimeout(() => {
       if (currentDragEvent && currentDragEventId) {
         setDraggingEvent(currentDragEvent);
         setDraggingEventId(currentDragEventId);
-        console.log(`Drag state maintained: ref startDate=${startDateRef.current}, ref targetDate=${targetDateRef.current}`);
       }
     }, 50);
     
@@ -168,21 +161,17 @@ export function useDragToDate({
   };
   
   // End dragging an event
-  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, eventId: string) => {
+  const handleDragEnd = () => {
     // Use refs for guaranteed accurate values
     const startDate = startDateRef.current;
     const targetDate = targetDateRef.current;
     const draggedEventId = eventIdRef.current;
     
-    console.log(`Drag ended. Event ID: ${eventId}`);
-    console.log(`USING REFS - startDate: ${startDate}, targetDate: ${targetDate}, eventId: ${draggedEventId}`);
     
     // Only proceed if we have valid data
     if (startDate && targetDate && draggedEventId && onMoveEvent) {
-      console.log(`Comparing dates - Start: ${startDate}, End: ${targetDate}`);
       
       if (startDate !== targetDate) {
-        console.log(`SUCCESS: Moving event from ${startDate} to ${targetDate}`);
         onMoveEvent(draggedEventId, startDate, targetDate);
       } else {
         console.log(`PROBLEM: Same date detected in refs (${startDate} === ${targetDate}), not moving event`);

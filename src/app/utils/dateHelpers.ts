@@ -47,3 +47,11 @@ export const parseDateString = (dateString: string): Date | null => {
 export const isSameDateString = (dateStr1: string, dateStr2: string): boolean => {
   return dateStr1 === dateStr2;
 }; 
+
+export const parseDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number);
+  if (!year || !month || !day) {
+    throw new Error('Invalid date string');
+  }
+  return new Date(year, month - 1, day);
+};

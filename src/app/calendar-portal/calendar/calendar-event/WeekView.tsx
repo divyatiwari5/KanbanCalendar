@@ -1,98 +1,54 @@
 "use client";
 
-import { format } from "date-fns";
-import { useState } from "react";
-import { events as initialEvents, CalendarEvent } from "@/app/mockData/eventData";
-import WeekViewMobile from "./WeekView.Mobile";
-import WeekViewDesktop from "./WeekView.Desktop";
+import { memo, useMemo } from "react";
+import WeekViewMobile from "./mobile/WeekView.Mobile";
+import WeekViewDesktop from "./desktop/WeekView.Desktop";
+import { useWeekEvents } from "@/app/hooks/useWeekEvents";
+import type { CalendarEvent } from "@/app/mockData/eventData";
 
 interface WeekViewProps {
   selectedDate: Date;
   onDateChange: (date: Date) => void;
 }
 
-// Define the EventsByDate interface
-interface EventsByDate {
+export interface EventsByDate {
   [date: string]: CalendarEvent[];
 }
 
 const WeekView = ({ selectedDate, onDateChange }: WeekViewProps) => {
-  const [events, setEvents] = useState<EventsByDate>(initialEvents);
+  const { 
+    events, 
+    selectedDayEvents, 
+    handleEventUpdate, 
+    handleMoveEvent 
+  } = useWeekEvents(onDateChange);
 
-  // Get events for the selected day (mobile view)
-  const getSelectedDayEvents = () => {
-    const dateString = format(selectedDate, "yyyy-MM-dd");
-    return events[dateString] || [];
-  };
+  // Memoize the current day's events
+  const currentDayEvents = useMemo(() => 
+    selectedDayEvents(selectedDate),
+    [selectedDayEvents, selectedDate]
+  );
 
-  // Handle event updates (desktop view)
-  const handleEventUpdate = (updatedEvents: EventsByDate) => {
-    setEvents(updatedEvents);
-  };
-  
-  // Handle event movement between dates (mobile view)
-  const handleMoveEvent = (eventId: string, fromDate: string, toDate: string) => {
-    console.log(`MOVE EVENT - ID: ${eventId}, From: ${fromDate}, To: ${toDate}`);
-    
-    try {
-      // Create a copy of the current events
-      const newEvents = { ...events };
-      
-      // Find the event in the source date events array
-      const sourceEvents = [...(newEvents[fromDate] || [])];
-      const eventIndex = sourceEvents.findIndex(event => event.id === eventId);
-      
-      console.log(`Found event at index: ${eventIndex} in source date`);
-      
-      if (eventIndex === -1) {
-        console.error(`Event with ID ${eventId} not found in source date ${fromDate}`);
-        return; // Event not found
-      }
-      
-      // Remove the event from source date
-      const [movedEvent] = sourceEvents.splice(eventIndex, 1);
-      newEvents[fromDate] = sourceEvents;
-      
-      // Make sure destination date has an array
-      if (!newEvents[toDate]) {
-        newEvents[toDate] = [];
-      }
-      
-      // Add to destination date
-      const destinationEvents = [...(newEvents[toDate] || [])];
-      destinationEvents.push(movedEvent);
-      newEvents[toDate] = destinationEvents;
-      
-      // Update the events state
-      setEvents(newEvents);
-      
-      console.log(`Successfully moved event from ${fromDate} to ${toDate}`);
-      console.log(`Events in ${toDate} now:`, newEvents[toDate]);
-      
-      // Navigate to the destination date to show the moved event
-      const [year, month, day] = toDate.split('-').map(Number);
-      const newDate = new Date(year, month - 1, day); // month is 0-indexed in JS Date
-      onDateChange(newDate);
-    } catch (error) {
-      console.error("Error moving event:", error);
-    }
-  };
+  // Memoize props for child components to prevent unnecessary re-renders
+  const mobileViewProps = useMemo(() => ({
+    events: currentDayEvents,
+    selectedDate,
+    onDateChange,
+    onMoveEvent: handleMoveEvent
+  }), [currentDayEvents, selectedDate, onDateChange, handleMoveEvent]);
+
+  const desktopViewProps = useMemo(() => ({
+    selectedDate,
+    events,
+    onEventUpdate: handleEventUpdate
+  }), [selectedDate, events, handleEventUpdate]);
 
   return (
     <div className="w-full relative mt-4 rounded-lg overflow-hidden bg-[#eef1f9]">
-      <WeekViewMobile
-        events={getSelectedDayEvents()}
-        selectedDate={selectedDate}
-        onDateChange={onDateChange}
-        onMoveEvent={handleMoveEvent}
-      />
-      <WeekViewDesktop 
-        selectedDate={selectedDate} 
-        events={events} 
-        onEventUpdate={handleEventUpdate}
-      />
+      <WeekViewMobile {...mobileViewProps} />
+      <WeekViewDesktop {...desktopViewProps} />
     </div>
   );
 };
 
-export default WeekView;
+export default memo(WeekView);
