@@ -1,8 +1,8 @@
 "use client";
 
 import { memo, useMemo } from "react";
-import WeekViewMobile from "./WeekView.Mobile";
-import WeekViewDesktop from "./WeekView.Desktop";
+import WeekViewMobile from "./mobile/WeekView.Mobile";
+import WeekViewDesktop from "./desktop/WeekView.Desktop";
 import { useWeekEvents } from "@/app/hooks/useWeekEvents";
 import type { CalendarEvent } from "@/app/mockData/eventData";
 
@@ -11,7 +11,6 @@ interface WeekViewProps {
   onDateChange: (date: Date) => void;
 }
 
-// Define the EventsByDate interface
 export interface EventsByDate {
   [date: string]: CalendarEvent[];
 }

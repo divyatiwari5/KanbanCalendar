@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarEvent } from "@/app/mockData/eventData";
 import { useDragToDate } from "@/app/hooks/useDragToDate";
-import EventDetails from "./EventDetails";
+import EventDetails from "../EventDetails";
 import DragIndicators from "./DragIndicators";
 import EmptyStateView from "./EmptyStateView";
 import EventCard from "./EventCard";
