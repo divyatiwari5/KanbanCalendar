@@ -6,10 +6,14 @@ import type { CalendarEvent } from '@/app/mockData/eventData';
 
 interface EventDetailsProps {
   event: CalendarEvent;
+  weekId?: string;
   onClose: () => void;
 }
 
-const EventDetails = ({ event, onClose}: EventDetailsProps) => {
+const EventDetails = ({ event, weekId = '', onClose}: EventDetailsProps) => {
+  // Use the weekId if provided (for matching layoutId)
+  const layoutIdPrefix = weekId ? `${weekId}-` : '';
+
   return (
     <>
       <motion.div
@@ -34,12 +38,12 @@ const EventDetails = ({ event, onClose}: EventDetailsProps) => {
           </svg>
         </motion.button>
         <motion.div
-          layoutId={`event-${event.id}`}
+          layoutId={`event-${layoutIdPrefix}${event.id}`}
           className="w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col md:flex-row"
         >
           <motion.div 
             className="relative w-full h-48 md:h-full md:w-[55%] flex-shrink-0" 
-            layoutId={`image-${event.id}`}
+            layoutId={`image-${layoutIdPrefix}${event.id}`}
           >
             <Image 
               src={event.imageUrl} 
@@ -51,21 +55,21 @@ const EventDetails = ({ event, onClose}: EventDetailsProps) => {
           </motion.div>
           <motion.div 
             className="flex flex-col flex-1" 
-            layoutId={`content-${event.id}`}
+            layoutId={`content-${layoutIdPrefix}${event.id}`}
           >
             <motion.div 
               className="flex-1 p-6" 
-              layoutId={`text-${event.id}`}
+              layoutId={`text-${layoutIdPrefix}${event.id}`}
             >
               <motion.h2 
                 className="text-2xl font-bold mb-2 text-gray-900"
-                layoutId={`title-${event.id}`}
+                layoutId={`title-${layoutIdPrefix}${event.id}`}
               >
                 {event.title}
               </motion.h2>
               <motion.div 
                 className="text-lg mb-4 text-indigo-600"
-                layoutId={`time-${event.id}`}
+                layoutId={`time-${layoutIdPrefix}${event.id}`}
               >
                 {event.time}
               </motion.div>
@@ -86,4 +90,4 @@ const EventDetails = ({ event, onClose}: EventDetailsProps) => {
   );
 };
 
-export default EventDetails; 
+export default EventDetails;

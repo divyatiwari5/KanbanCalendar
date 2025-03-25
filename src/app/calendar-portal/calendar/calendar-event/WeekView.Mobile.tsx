@@ -24,8 +24,10 @@ const WeekViewMobile = ({
   onDateChange,
   onMoveEvent,
 }: MobileViewProps) => {
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
-  
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+    null
+  );
+
   // Use our custom hook for drag-to-date functionality
   const {
     isDragging,
@@ -63,7 +65,7 @@ const WeekViewMobile = ({
           <p className="text-xs mt-1">Drag to screen edges to change dates</p>
         </div>
       )}
-      
+
       {/* Visual edge indicators for dragging to previous/next day */}
       {isDragging && (
         <>
@@ -79,9 +81,11 @@ const WeekViewMobile = ({
           </div>
         </>
       )}
-      
+
       {/* Scrollable container with direct standard overflow-y */}
-      <div className="flex-1 overflow-y-auto touch-pan-y overscroll-contain">
+      <div
+        className="flex-1 overflow-y-auto touch-pan-y overscroll-contain"
+      >
         <motion.div
           className="p-4 space-y-4"
           initial="hidden"
@@ -89,37 +93,49 @@ const WeekViewMobile = ({
           key={`container-${currentDateStr}`}
         >
           {/* Ghost dragged element that remains visible when changing dates */}
-          {isDragging && draggingEvent && !events.some(e => e.id === draggingEventId) && (
-            <motion.div
-              className="bg-white rounded-2xl shadow-sm overflow-hidden cursor-grabbing ring-2 ring-blue-500 opacity-90"
-              animate={{
-                scale: 1.05,
-                boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                zIndex: 50
-              }}
-            >
-              <div className="relative w-full h-32">
-                <Image
-                  src={draggingEvent.imageUrl}
-                  alt={draggingEvent.title}
-                  className="w-full h-full object-cover"
-                  fill
-                />
-                <div className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm">
-                  {draggingEvent.time}
+          {isDragging &&
+            draggingEvent &&
+            !events.some((e) => e.id === draggingEventId) && (
+              <motion.div
+                className="bg-white rounded-2xl shadow-sm overflow-hidden cursor-grabbing ring-2 ring-blue-500 opacity-90"
+                animate={{
+                  scale: 1.05,
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                  zIndex: 50,
+                }}
+                layoutId={`event-${currentDateStr}-${draggingEvent.id}`}
+              >
+                <div className="relative w-full h-32">
+                  <Image
+                    src={draggingEvent.imageUrl}
+                    alt={draggingEvent.title}
+                    className="w-full h-full object-cover"
+                    fill
+                  />
+                  <motion.div
+                    className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm"
+                    layoutId={`time-${currentDateStr}-${draggingEvent.id}`}
+                  >
+                    {draggingEvent.time}
+                  </motion.div>
                 </div>
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {draggingEvent.title}
-                </h3>
-                <p className="mt-1 text-gray-600 line-clamp-2">
-                  {draggingEvent.description}
-                </p>
-              </div>
-            </motion.div>
-          )}
-          
+                <div className="p-4">
+                  <motion.h3 
+                    layoutId={`title-${currentDateStr}-${draggingEvent.id}`}
+                    className="text-lg font-semibold text-gray-900"
+                  >
+                    {draggingEvent.title}
+                  </motion.h3>
+                  <motion.div
+                    className="mt-1 text-gray-600 line-clamp-2"
+                    layoutId={`content-${currentDateStr}-${draggingEvent.id}`}
+                  >
+                    {draggingEvent.description}
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+
           {events.length === 0 && !isDragging ? (
             <motion.div
               className="flex items-center justify-center text-center text-gray-500 min-h-[calc(100vh-250px)] bg-white rounded-2xl shadow-sm"
@@ -136,6 +152,7 @@ const WeekViewMobile = ({
             events.map((event, index) => (
               <motion.div
                 key={`${currentDateStr}-${event.id}`}
+                layoutId={`event-${currentDateStr}-${event.id}`}
                 drag
                 dragConstraints={containerRef}
                 dragElastic={0.5}
@@ -147,19 +164,23 @@ const WeekViewMobile = ({
                 whileDrag={{
                   scale: 1.05,
                   boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-                  zIndex: 50
+                  zIndex: 50,
                 }}
                 onClick={() => {
                   if (!isDragging) {
                     setSelectedEvent(event);
                   }
                 }}
-                whileHover={!isDragging ? {
-                  scale: 1.02,
-                  transition: { duration: 0.3, ease: "easeOut" },
-                } : {}}
+                whileHover={
+                  !isDragging
+                    ? {
+                        scale: 1.02,
+                        transition: { duration: 0.3, ease: "easeOut" },
+                      }
+                    : {}
+                }
                 className={`bg-white rounded-2xl shadow-sm overflow-hidden cursor-grab active:cursor-grabbing ${
-                  draggingEventId === event.id ? 'ring-2 ring-blue-500' : ''
+                  draggingEventId === event.id ? "ring-2 ring-blue-500" : ""
                 }`}
               >
                 <div className="relative w-full h-32">
@@ -169,22 +190,31 @@ const WeekViewMobile = ({
                     className="w-full h-full object-cover"
                     fill
                   />
-                  <div className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm">
+                  <motion.div 
+                    layoutId={`time-${currentDateStr}-${event.id}`}
+                    className="absolute top-4 right-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm"
+                  >
                     {event.time}
-                  </div>
+                  </motion.div>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <motion.h3 
+                    layoutId={`title-${currentDateStr}-${event.id}`}
+                    className="text-lg font-semibold text-gray-900"
+                  >
                     {event.title}
-                  </h3>
-                  <p className="mt-1 text-gray-600 line-clamp-2">
+                  </motion.h3>
+                  <motion.div 
+                    layoutId={`content-${currentDateStr}-${event.id}`}
+                    className="mt-1 text-gray-600 line-clamp-2"
+                  >
                     {event.description}
-                  </p>
+                  </motion.div>
                 </div>
               </motion.div>
             ))
           )}
-          
+
           {/* Add extra padding at bottom for better scrolling */}
           <div className="h-16"></div>
         </motion.div>
@@ -194,6 +224,7 @@ const WeekViewMobile = ({
         {selectedEvent && !isDragging && (
           <EventDetails
             event={selectedEvent}
+            weekId={currentDateStr}
             onClose={() => setSelectedEvent(null)}
           />
         )}
