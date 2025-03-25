@@ -11,6 +11,8 @@ Check out the live application: [https://kanban-calendar.vercel.app/](https://ka
 This Kanban Calendar is a responsive web application built with Next.js that allows users to:
 - View and interact with a weekly calendar interface
 - Drag and drop events to reschedule them
+- Smooth navigation between days by swiping left and right on mobile 
+- Smooth navigation between days by selecting any date on mobile 
 - View detailed information about events when clicked
 - Navigate between weeks with intuitive controls
 
@@ -34,6 +36,8 @@ This Kanban Calendar is a responsive web application built with Next.js that all
 ### Key Features
 - Interactive weekly calendar view
 - Animated event details modal
+- Smooth navigation between days by swiping left and right on mobile 
+- Smooth navigation between days by selecting any date on mobile 
 - Drag and drop event scheduling
 - Responsive UI for desktop and mobile devices
 
