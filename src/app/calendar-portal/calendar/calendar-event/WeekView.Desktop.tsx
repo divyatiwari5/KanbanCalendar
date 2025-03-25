@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { startOfWeek, addDays, format } from 'date-fns';
-import { CalendarEvent } from '@/app/mockData/eventData';
-import EventBlock from './EventBlock';
-import TimeGrid from './TimeGrid';
-import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd';
+import { startOfWeek, addDays, format, isToday } from "date-fns";
+import { CalendarEvent } from "@/app/mockData/eventData";
+import EventBlock from "./EventBlock";
+import TimeGrid from "./TimeGrid";
+import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 
 interface DesktopViewProps {
   selectedDate: Date;
@@ -13,11 +13,11 @@ interface DesktopViewProps {
   onEventUpdate?: (updatedEvents: Record<string, CalendarEvent[]>) => void;
 }
 
-const WeekViewDesktop = ({ 
-  selectedDate, 
-  events, 
+const WeekViewDesktop = ({
+  selectedDate,
+  events,
   hourHeight = 100,
-  onEventUpdate 
+  onEventUpdate,
 }: DesktopViewProps) => {
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 0 });
 
@@ -28,13 +28,13 @@ const WeekViewDesktop = ({
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-    
+
     // Dropped outside a valid drop zone
     if (!destination) return;
 
     const sourceDate = source.droppableId;
     const destinationDate = destination.droppableId;
-    
+
     // Create a new events object to maintain immutability
     const newEvents = { ...events };
 
@@ -54,10 +54,19 @@ const WeekViewDesktop = ({
     onEventUpdate?.(newEvents);
   };
 
+  const currentTime = {
+    top:
+      (new Date().getHours() * 60 + new Date().getMinutes()) *
+      (hourHeight / 60),
+  };
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="hidden md:block">
-        <div className="overflow-y-auto calendar-scroll" style={{ height: "600px" }}>
+        <div
+          className="overflow-y-auto calendar-scroll"
+          style={{ height: "600px" }}
+        >
           <div className="relative" style={{ height: `${hourHeight * 24}px` }}>
             <TimeGrid hourHeight={hourHeight} />
             {/* Events container */}
@@ -67,25 +76,26 @@ const WeekViewDesktop = ({
                   const currentDay = addDays(weekStart, dayIndex);
                   const dateString = format(currentDay, "yyyy-MM-dd");
                   const dayEvents = getEventsForDay(currentDay);
-                  
+                  const isCurrentDay = isToday(currentDay);
+
                   return (
-                    <Droppable 
-                      key={dateString} 
+                    <Droppable
+                      key={dateString}
                       droppableId={dateString}
                       type="EVENT"
                       direction="vertical"
                       mode="standard"
                     >
                       {(provided, snapshot) => (
-                        <div 
+                        <div
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                           className={`relative h-full bg-white ${
-                            snapshot.isDraggingOver ? 'bg-blue-50' : ''
+                            snapshot.isDraggingOver ? "bg-blue-50" : ""
                           }`}
                           style={{
                             height: `${hourHeight * 24}px`,
-                            minHeight: `${hourHeight * 24}px`
+                            minHeight: `${hourHeight * 24}px`,
                           }}
                         >
                           <div className="absolute inset-0 pointer-events-none">
@@ -97,8 +107,20 @@ const WeekViewDesktop = ({
                               />
                             ))}
                           </div>
+
+                          {/* Current time indicator */}
+                          {isCurrentDay && (
+                            <div
+                              className="absolute left-0 right-0 flex items-center z-20 pointer-events-none"
+                              style={{ top: `${currentTime.top}px` }}
+                            >
+                              <div className="w-1.5 h-1.5 rounded-full bg-red-500 -ml-0.75" />
+                              <div className="flex-1 h-px bg-red-500" />
+                            </div>
+                          )}
+
                           {dayEvents.map((event, index) => (
-                            <EventBlock 
+                            <EventBlock
                               key={event.id}
                               event={event}
                               hourHeight={hourHeight}
@@ -121,4 +143,4 @@ const WeekViewDesktop = ({
   );
 };
 
-export default WeekViewDesktop; 
+export default WeekViewDesktop;
