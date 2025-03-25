@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { CalendarEvent } from '@/app/mockData/eventData';
 import Image from 'next/image';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import EventDetails from './EventDetails';
 import { format } from 'date-fns';
 import { Draggable } from '@hello-pangea/dnd';
@@ -46,10 +46,19 @@ const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps)
     <>
       <Draggable draggableId={event.id} index={index}>
         {(provided, snapshot) => (
-          <div
+          // @ts-expect-error - Type conflict between framer-motion and react-beautiful-dnd props
+          <motion.div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            layoutId={`event-${weekId}-${event.id}`}
+            onClick={() => {
+              if (!snapshot.isDragging) {
+                setIsInitialRender(false);
+                setIsOpen(true);
+              }
+            }}
+            initial={isInitialRender ? { opacity: 1 } : false}
             className={`absolute w-[calc(100%-8px)] ml-1 rounded-xl bg-white shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing ${
               snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-500 z-50' : 'z-10'
             }`}
@@ -59,16 +68,18 @@ const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps)
               height: `${height}px`,
               ...provided.draggableProps.style,
             }}
-            onClick={() => {
-              if (!snapshot.isDragging) {
-                setIsInitialRender(false);
-                setIsOpen(true);
-              }
-            }}
           >
             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-400 rounded-l-xl" />
-            <div className="flex flex-col h-full pl-3">
-              <div className="relative w-full flex-1">
+            <motion.div 
+              className="flex flex-col h-full pl-3" 
+              layoutId={`content-${weekId}-${event.id}`}
+              initial={isInitialRender ? { opacity: 1 } : false}
+            >
+              <motion.div 
+                className="relative w-full flex-1"
+                layoutId={`image-${weekId}-${event.id}`}
+                initial={isInitialRender ? { opacity: 1 } : false}
+              >
                 <Image 
                   src={event.imageUrl} 
                   alt={event.title}
@@ -76,17 +87,25 @@ const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps)
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
-              </div>
-              <div className="py-2">
-                <div className="font-normal text-[13px] text-gray-900">
+              </motion.div>
+              <motion.div 
+                className="py-2" 
+                layoutId={`text-${weekId}-${event.id}`}
+                initial={isInitialRender ? { opacity: 1 } : false}
+              >
+                <motion.div 
+                  className="font-normal text-[13px] text-gray-900" 
+                  layoutId={`title-${weekId}-${event.id}`}
+                  initial={isInitialRender ? { opacity: 1 } : false}
+                >
                   {event.title}
-                </div>
+                </motion.div>
                 <div className="text-xs text-gray-500 mt-1">
                   {event.time}
                 </div>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
         )}
       </Draggable>
 
