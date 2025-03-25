@@ -28,6 +28,24 @@ export const events: EventsByDate = {
         "http://fastly.picsum.photos/id/737/1920/1080.jpg?hmac=aFzER8Y4wcWTrXVx2wVKSj10IqnygaF33gESj0WGDwI",
       time: "02:00 PM",
     },
+    {
+      id: "event-10",
+      title: "Client Meeting",
+      description:
+        "Review project progress, timeline adjustments, and outline roadmap for next quarter with the client.",
+      imageUrl:
+        "https://fastly.picsum.photos/id/908/1920/1080.jpg?hmac=MeG_oA1s75hHAL_4JzCioh6--zyFTWSCTxOhe8ugvXo",
+      time: "11:30 AM",
+    },
+    {
+      id: "event-9",
+      title: "Client Meeting",
+      description:
+        "Review project progress, timeline adjustments, and outline roadmap for next quarter with the client.",
+      imageUrl:
+        "https://fastly.picsum.photos/id/908/1920/1080.jpg?hmac=MeG_oA1s75hHAL_4JzCioh6--zyFTWSCTxOhe8ugvXo",
+      time: "1:30 AM",
+    },
   ],
   "2025-03-20": [
     {

@@ -6,16 +6,17 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import EventDetails from './EventDetails';
 import { format } from 'date-fns';
+import { Draggable } from '@hello-pangea/dnd';
 
 interface EventBlockProps {
   event: CalendarEvent;
   hourHeight: number;
   selectedDate: Date;
+  index: number;
 }
 
-const EventBlock = ({ event, hourHeight, selectedDate }: EventBlockProps) => {
+const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isInitialRender, setIsInitialRender] = useState(true);
   const weekId = format(selectedDate, 'yyyy-MM-dd');
 
   const getEventPosition = () => {
@@ -42,53 +43,71 @@ const EventBlock = ({ event, hourHeight, selectedDate }: EventBlockProps) => {
 
   return (
     <>
-      <motion.div
-        layoutId={`event-${weekId}-${event.id}`}
-        onClick={() => {
-          setIsInitialRender(false);
-          setIsOpen(true);
-        }}
-        initial={isInitialRender ? { opacity: 1 } : false}
-        className="absolute w-[calc(100%-8px)] ml-1 rounded-xl bg-white shadow-[0_1px_4px_rgba(0,0,0,0.1)] pointer-events-auto cursor-pointer group hover:shadow-md z-10 overflow-hidden"
-        style={{
-          top: `${top}px`,
-          height: `${height}px`,
-        }}
-      >
-        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-400 rounded-l-xl" />
-        <motion.div 
-          className="flex flex-col h-full pl-3" 
-          layoutId={`content-${weekId}-${event.id}`}
-          initial={isInitialRender ? { opacity: 1 } : false}
-        >
-          <motion.div 
-            className="relative w-full flex-1"
-            layoutId={`image-${weekId}-${event.id}`}
-            initial={isInitialRender ? { opacity: 1 } : false}
+      <Draggable draggableId={event.id} index={index}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={{
+              position: 'absolute',
+              top: `${top}px`,
+              height: `${height}px`,
+              width: 'calc(100% - 8px)',
+              marginLeft: '4px',
+              ...provided.draggableProps.style,
+            }}
           >
-            <Image 
-              src={event.imageUrl} 
-              alt={event.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 33vw"
-            />
-          </motion.div>
-          <motion.div 
-            className="py-2" 
-            layoutId={`text-${weekId}-${event.id}`}
-            initial={isInitialRender ? { opacity: 1 } : false}
-          >
-            <motion.div 
-              className="font-normal text-[13px] text-gray-900" 
-              layoutId={`title-${weekId}-${event.id}`}
-              initial={isInitialRender ? { opacity: 1 } : false}
+            <motion.div
+              layoutId={`event-${weekId}-${event.id}`}
+              className={`w-full h-full rounded-xl bg-white shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing ${
+                snapshot.isDragging ? 'shadow-lg ring-2 ring-blue-500 z-50' : 'z-10'
+              }`}
+              onClick={() => {
+                if (!snapshot.isDragging) {
+                  setIsOpen(true);
+                }
+              }}
             >
-              {event.title}
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-blue-400 rounded-l-xl" />
+              <motion.div 
+                className="flex flex-col h-full pl-3" 
+                layoutId={`content-${weekId}-${event.id}`}
+              >
+                <motion.div 
+                  className="relative w-full flex-1"
+                  layoutId={`image-${weekId}-${event.id}`}
+                >
+                  <Image 
+                    src={event.imageUrl} 
+                    alt={event.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </motion.div>
+                <motion.div 
+                  className="py-2" 
+                  layoutId={`text-${weekId}-${event.id}`}
+                >
+                  <motion.div 
+                    className="font-normal text-[13px] text-gray-900" 
+                    layoutId={`title-${weekId}-${event.id}`}
+                  >
+                    {event.title}
+                  </motion.div>
+                  <motion.div 
+                    className="text-xs text-gray-500 mt-1"
+                    layoutId={`time-${weekId}-${event.id}`}
+                  >
+                    {event.time}
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
+          </div>
+        )}
+      </Draggable>
 
       <AnimatePresence mode="wait">
         {isOpen && (
@@ -96,7 +115,6 @@ const EventBlock = ({ event, hourHeight, selectedDate }: EventBlockProps) => {
             event={event} 
             weekId={weekId}
             onClose={() => setIsOpen(false)} 
-            isInitialRender={isInitialRender}
           />
         )}
       </AnimatePresence>
