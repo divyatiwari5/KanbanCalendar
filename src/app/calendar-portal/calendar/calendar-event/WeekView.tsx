@@ -1,7 +1,8 @@
 "use client";
 
 import { format } from "date-fns";
-import { events } from "@/app/mockData/eventData";
+import { useState } from "react";
+import { events as initialEvents } from "@/app/mockData/eventData";
 import WeekViewMobile from "./WeekView.Mobile";
 import WeekViewDesktop from "./WeekView.Desktop";
 
@@ -11,11 +12,16 @@ interface WeekViewProps {
 }
 
 const WeekView = ({ selectedDate, onDateChange }: WeekViewProps) => {
+  const [events, setEvents] = useState(initialEvents);
 
   // Get events for the selected day (mobile view)
   const getSelectedDayEvents = () => {
     const dateString = format(selectedDate, "yyyy-MM-dd");
     return events[dateString] || [];
+  };
+
+  const handleEventUpdate = (updatedEvents: typeof events) => {
+    setEvents(updatedEvents);
   };
 
   return (
@@ -25,7 +31,11 @@ const WeekView = ({ selectedDate, onDateChange }: WeekViewProps) => {
         selectedDate={selectedDate}
         onDateChange={onDateChange}
       />
-      <WeekViewDesktop selectedDate={selectedDate} events={events} />
+      <WeekViewDesktop 
+        selectedDate={selectedDate} 
+        events={events} 
+        onEventUpdate={handleEventUpdate}
+      />
     </div>
   );
 };
