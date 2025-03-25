@@ -8,10 +8,10 @@ interface EventDetailsProps {
   event: CalendarEvent;
   weekId: string;
   onClose: () => void;
-  isInitialRender: boolean;
+  isInitialRender?: boolean;
 }
 
-const EventDetails = ({ event, weekId, onClose, isInitialRender }: EventDetailsProps) => {
+const EventDetails = ({ event, weekId, onClose, isInitialRender = false }: EventDetailsProps) => {
   return (
     <>
       <motion.div
@@ -36,12 +36,12 @@ const EventDetails = ({ event, weekId, onClose, isInitialRender }: EventDetailsP
           </svg>
         </motion.button>
         <motion.div
-          layoutId={`event-${weekId}-${event.id}`}
+          layoutId={`event-${event.id}`}
           className="w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col md:flex-row"
         >
           <motion.div 
             className="relative w-full h-48 md:h-full md:w-[55%] flex-shrink-0" 
-            layoutId={`image-${weekId}-${event.id}`}
+            layoutId={`image-${event.id}`}
           >
             <Image 
               src={event.imageUrl} 
@@ -53,21 +53,21 @@ const EventDetails = ({ event, weekId, onClose, isInitialRender }: EventDetailsP
           </motion.div>
           <motion.div 
             className="flex flex-col flex-1" 
-            layoutId={`content-${weekId}-${event.id}`}
+            layoutId={`content-${event.id}`}
           >
             <motion.div 
               className="flex-1 p-6" 
-              layoutId={`text-${weekId}-${event.id}`}
+              layoutId={`text-${event.id}`}
             >
               <motion.h2 
                 className="text-2xl font-bold mb-2 text-gray-900"
-                layoutId={`title-${weekId}-${event.id}`}
+                layoutId={`title-${event.id}`}
               >
                 {event.title}
               </motion.h2>
               <motion.div 
                 className="text-lg mb-4 text-indigo-600"
-                layoutId={`time-${weekId}-${event.id}`}
+                layoutId={`time-${event.id}`}
               >
                 {event.time}
               </motion.div>
