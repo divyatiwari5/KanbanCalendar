@@ -34,10 +34,10 @@ const EventCard = ({
     <motion.div
       key={`${currentDateStr}-${event.id}`}
       layoutId={`event-${currentDateStr}-${event.id}`}
-      drag
+      drag="x"
+      dragDirectionLock
       dragConstraints={containerRef}
       dragElastic={0.5}
-      dragDirectionLock={false}
       onDragStart={() => onDragStart(event.id)}
       onDrag={onDrag}
       onDragEnd={(e, info) => onDragEnd(e, info, event.id)}
