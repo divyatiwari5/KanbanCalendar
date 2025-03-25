@@ -1,3 +1,52 @@
+# Kanban Calendar
+
+A modern, interactive calendar application with kanban-style drag-and-drop capabilities for managing events.
+
+## Live Demo
+
+Check out the live application: [https://kanban-calendar.vercel.app/](https://kanban-calendar.vercel.app/)
+
+## About The Project
+
+This Kanban Calendar is a responsive web application built with Next.js that allows users to:
+- View and interact with a weekly calendar interface
+- Drag and drop events to reschedule them
+- View detailed information about events when clicked
+- Navigate between weeks with intuitive controls
+
+## Development Approach
+
+### Technologies Used
+- **Next.js 15** - React framework with App Router
+- **React 19** - UI component library
+- **TypeScript** - For type safety and code quality
+- **Tailwind CSS** - For styling and responsive design
+- **Framer Motion** - For smooth animations and transitions
+- **Hello Pangea DND** - For drag and drop functionality
+- **Date-fns** - For date manipulation and formatting
+
+### Architecture
+- **Component-Based Structure**: The app is built using reusable React components
+- **Client-Side Navigation**: Using Next.js App Router for smooth transitions
+- **Responsive Design**: Adapts to different screen sizes with mobile-first approach
+- **Data Management**: Currently uses mock data with a flexible structure for easy integration with a backend
+
+### Key Features
+- Interactive weekly calendar view
+- Animated event details modal
+- Drag and drop event scheduling
+- Responsive UI for desktop and mobile devices
+
+## Future Scope
+
+### Enhanced Drag and Drop Experience
+- Optimize touch interactions for mobile devices
+- Implement smoother animations during dragging operations
+- Add haptic feedback for drag operations on supporting devices
+- Implement custom drag handles and drop indicators
+- Add support for multi-day event scheduling through drag operations
+- Introduce snap-to-grid functionality for more precise time scheduling
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -20,17 +69,3 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
