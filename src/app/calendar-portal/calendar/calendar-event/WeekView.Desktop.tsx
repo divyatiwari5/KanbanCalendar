@@ -62,7 +62,7 @@ const WeekViewDesktop = ({
             <TimeGrid hourHeight={hourHeight} />
             {/* Events container */}
             <div className="absolute top-0 left-20 right-4">
-              <div className="grid grid-cols-7 gap-2 h-full">
+              <div className="grid grid-cols-7 gap-px h-full bg-gray-200">
                 {Array.from({ length: 7 }, (_, dayIndex) => {
                   const currentDay = addDays(weekStart, dayIndex);
                   const dateString = format(currentDay, "yyyy-MM-dd");
@@ -80,7 +80,7 @@ const WeekViewDesktop = ({
                         <div 
                           ref={provided.innerRef}
                           {...provided.droppableProps}
-                          className={`relative h-full border-r last:border-r-0 px-1 ${
+                          className={`relative h-full bg-white ${
                             snapshot.isDraggingOver ? 'bg-blue-50' : ''
                           }`}
                           style={{
