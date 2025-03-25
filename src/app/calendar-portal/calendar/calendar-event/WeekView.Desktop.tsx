@@ -90,8 +90,10 @@ const WeekViewDesktop = ({
                         <div
                           ref={provided.innerRef}
                           {...provided.droppableProps}
-                          className={`relative h-full bg-white ${
-                            snapshot.isDraggingOver ? "bg-blue-50" : ""
+                          className={`relative h-full bg-white transition-colors duration-150 ${
+                            snapshot.isDraggingOver 
+                              ? 'bg-blue-50/70 shadow-[inset_0_0_0_2px_rgba(59,130,246,0.2)]' 
+                              : ''
                           }`}
                           style={{
                             height: `${hourHeight * 24}px`,
