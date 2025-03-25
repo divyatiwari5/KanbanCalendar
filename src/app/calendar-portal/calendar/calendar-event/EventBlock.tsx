@@ -17,7 +17,6 @@ interface EventBlockProps {
 
 const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isInitialRender, setIsInitialRender] = useState(true);
   const weekId = format(selectedDate, 'yyyy-MM-dd');
 
   const getEventPosition = () => {
@@ -66,7 +65,6 @@ const EventBlock = ({ event, hourHeight, selectedDate, index }: EventBlockProps)
               }`}
               onClick={() => {
                 if (!snapshot.isDragging) {
-                  setIsInitialRender(false);
                   setIsOpen(true);
                 }
               }}
