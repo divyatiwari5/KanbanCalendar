@@ -1,9 +1,9 @@
 "use client";
 
-import { format, startOfWeek, addDays, isToday } from "date-fns";
-import { DayHeaderProps } from "./DayHeader";
 import CalendarHeaderMobile from "./CalendarHeader.Mobile";
 import CalendarHeaderDesktop from "./CalendarHeader.Desktop";
+import CalendarNavigation from "./CalendarNavigation";
+import { generateWeekDays, getCurrentMonth } from "@/app/utils/dateHelpers";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -20,24 +20,8 @@ const CalendarHeader = ({
   onDaySelect,
   selectedDate,
 }: CalendarHeaderProps) => {
-  const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
-    const days: DayHeaderProps[] = [];
-    const start = startOfWeek(startDate, { weekStartsOn: 0 });
-
-    for (let i = 0; i < 7; i++) {
-      const date = addDays(start, i);
-      days.push({
-        date: parseInt(format(date, "d")),
-        day: format(date, "EEE"),
-        isToday: isToday(date),
-        fullDate: date,
-      });
-    }
-    return days;
-  };
-
   const days = generateWeekDays(currentDate);
-  const currentMonth = format(currentDate, "MMMM yyyy");
+  const currentMonth = getCurrentMonth(currentDate);
 
   return (
     <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 rounded-lg">
@@ -46,20 +30,7 @@ const CalendarHeader = ({
           <h2 className="text-xl">Your Schedule</h2>
           <h3 className="text-sm mt-1 opacity-80">{currentMonth}</h3>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={onPrevWeek}
-            className="w-10 h-10 flex items-center justify-center bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
-          >
-            ←
-          </button>
-          <button
-            onClick={onNextWeek}
-            className="w-10 h-10 flex items-center justify-center bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
-          >
-            →
-          </button>
-        </div>
+        <CalendarNavigation onPrevWeek={onPrevWeek} onNextWeek={onNextWeek} />
       </div>
 
       <CalendarHeaderMobile
@@ -67,7 +38,7 @@ const CalendarHeader = ({
         selectedDate={selectedDate}
         onDaySelect={onDaySelect}
       />
-      <CalendarHeaderDesktop days={days} />
+      <CalendarHeaderDesktop days={days} selectedDate={selectedDate} />
     </div>
   );
 };

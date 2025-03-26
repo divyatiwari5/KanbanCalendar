@@ -1,11 +1,15 @@
+import { WeekDayData } from "@/app/utils/dateHelpers";
 import DayHeader from "./DayHeader";
-import { DayHeaderProps } from "./DayHeader";
 
 interface DesktopCalendarHeaderProps {
-  days: DayHeaderProps[];
+  days: WeekDayData[];
+  selectedDate: Date;
 }
 
-const CalendarHeaderDesktop = ({ days }: DesktopCalendarHeaderProps) => {
+const CalendarHeaderDesktop = ({
+  days,
+  selectedDate,
+}: DesktopCalendarHeaderProps) => {
   return (
     <div className="hidden md:flex">
       {/* Time gutter space */}
@@ -15,10 +19,8 @@ const CalendarHeaderDesktop = ({ days }: DesktopCalendarHeaderProps) => {
         {days.map((day) => (
           <DayHeader
             key={`${day.date}-${day.day}`}
-            date={day.date}
-            day={day.day}
-            isToday={day.isToday}
-            fullDate={day.fullDate}
+            {...day}
+            selectedDate={selectedDate}
           />
         ))}
       </div>
