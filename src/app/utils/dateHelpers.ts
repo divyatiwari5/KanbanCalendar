@@ -1,10 +1,17 @@
 import { format, addDays, subDays, parseISO, isValid, startOfWeek, isToday } from "date-fns";
+import { CalendarEvent } from "@/app/mockData/eventData";
 
 export interface WeekDayData {
   date: number;
   day: string;
   isToday: boolean;
   fullDate: Date;
+}
+
+export interface WeekDayEvents {
+  currentDay: Date;
+  dateString: string;
+  dayEvents: CalendarEvent[];
 }
 
 /**
@@ -87,4 +94,31 @@ export const getCurrentMonth = (date: Date): string => {
  */
 export const isSameDay = (date1: Date, date2: Date): boolean => {
   return format(date1, "yyyy-MM-dd") === format(date2, "yyyy-MM-dd");
+};
+
+/**
+ * Generate week days with events
+ */
+export const generateWeekDaysWithEvents = (
+  weekStart: Date,
+  getEventsForDay: (date: Date) => CalendarEvent[]
+): WeekDayEvents[] => {
+  return Array.from({ length: 7 }, (_, dayIndex) => {
+    const currentDay = addDays(weekStart, dayIndex);
+    const dateString = format(currentDay, "yyyy-MM-dd");
+    const dayEvents = getEventsForDay(currentDay);
+    
+    return {
+      currentDay,
+      dateString,
+      dayEvents,
+    };
+  });
+};
+
+/**
+ * Calculate current time position in pixels
+ */
+export const calculateCurrentTimePosition = (hourHeight: number): number => {
+  return (new Date().getHours() * 60 + new Date().getMinutes()) * (hourHeight / 60);
 };
