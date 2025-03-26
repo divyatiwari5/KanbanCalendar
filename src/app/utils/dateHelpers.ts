@@ -1,5 +1,11 @@
 import { format, addDays, subDays, parseISO, isValid, startOfWeek, isToday } from "date-fns";
-import { DayHeaderProps } from "@/app/calendar-portal/calendar/calendar-header/DayHeader";
+
+export interface WeekDayData {
+  date: number;
+  day: string;
+  isToday: boolean;
+  fullDate: Date;
+}
 
 /**
  * Format a date to yyyy-MM-dd format
@@ -42,13 +48,6 @@ export const parseDateString = (dateString: string): Date | null => {
   }
 };
 
-/**
- * Compare two date strings to see if they represent the same day
- */
-export const isSameDateString = (dateStr1: string, dateStr2: string): boolean => {
-  return dateStr1 === dateStr2;
-}; 
-
 export const parseDate = (dateString: string): Date => {
   const [year, month, day] = dateString.split('-').map(Number);
   if (!year || !month || !day) {
@@ -60,8 +59,8 @@ export const parseDate = (dateString: string): Date => {
 /**
  * Generate week days for the calendar header
  */
-export const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
-  const days: DayHeaderProps[] = [];
+export const generateWeekDays = (startDate: Date): WeekDayData[] => {
+  const days: WeekDayData[] = [];
   const start = startOfWeek(startDate, { weekStartsOn: 0 });
 
   for (let i = 0; i < 7; i++) {
@@ -81,4 +80,11 @@ export const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
  */
 export const getCurrentMonth = (date: Date): string => {
   return format(date, "MMMM yyyy");
+};
+
+/**
+ * Compare two dates to see if they represent the same day
+ */
+export const isSameDay = (date1: Date, date2: Date): boolean => {
+  return format(date1, "yyyy-MM-dd") === format(date2, "yyyy-MM-dd");
 };

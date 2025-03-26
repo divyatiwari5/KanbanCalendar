@@ -2,6 +2,7 @@
 
 import CalendarHeaderMobile from "./CalendarHeader.Mobile";
 import CalendarHeaderDesktop from "./CalendarHeader.Desktop";
+import CalendarNavigation from "./CalendarNavigation";
 import { generateWeekDays, getCurrentMonth } from "@/app/utils/dateHelpers";
 
 interface CalendarHeaderProps {
@@ -29,20 +30,7 @@ const CalendarHeader = ({
           <h2 className="text-xl">Your Schedule</h2>
           <h3 className="text-sm mt-1 opacity-80">{currentMonth}</h3>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={onPrevWeek}
-            className="w-10 h-10 flex items-center justify-center bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
-          >
-            ←
-          </button>
-          <button
-            onClick={onNextWeek}
-            className="w-10 h-10 flex items-center justify-center bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-full transition-all duration-200 hover:shadow-lg hover:scale-105 active:scale-95"
-          >
-            →
-          </button>
-        </div>
+        <CalendarNavigation onPrevWeek={onPrevWeek} onNextWeek={onNextWeek} />
       </div>
 
       <CalendarHeaderMobile
@@ -50,7 +38,7 @@ const CalendarHeader = ({
         selectedDate={selectedDate}
         onDaySelect={onDaySelect}
       />
-      <CalendarHeaderDesktop days={days} />
+      <CalendarHeaderDesktop days={days} selectedDate={selectedDate} />
     </div>
   );
 };
