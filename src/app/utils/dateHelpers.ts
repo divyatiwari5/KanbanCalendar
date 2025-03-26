@@ -1,4 +1,5 @@
-import { format, addDays, subDays, parseISO, isValid } from "date-fns";
+import { format, addDays, subDays, parseISO, isValid, startOfWeek, isToday } from "date-fns";
+import { DayHeaderProps } from "@/app/calendar-portal/calendar/calendar-header/DayHeader";
 
 /**
  * Format a date to yyyy-MM-dd format
@@ -54,4 +55,30 @@ export const parseDate = (dateString: string): Date => {
     throw new Error('Invalid date string');
   }
   return new Date(year, month - 1, day);
+};
+
+/**
+ * Generate week days for the calendar header
+ */
+export const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
+  const days: DayHeaderProps[] = [];
+  const start = startOfWeek(startDate, { weekStartsOn: 0 });
+
+  for (let i = 0; i < 7; i++) {
+    const date = addDays(start, i);
+    days.push({
+      date: parseInt(format(date, "d")),
+      day: format(date, "EEE"),
+      isToday: isToday(date),
+      fullDate: date,
+    });
+  }
+  return days;
+};
+
+/**
+ * Get the current month and year in a formatted string
+ */
+export const getCurrentMonth = (date: Date): string => {
+  return format(date, "MMMM yyyy");
 };

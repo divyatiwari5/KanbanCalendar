@@ -1,9 +1,8 @@
 "use client";
 
-import { format, startOfWeek, addDays, isToday } from "date-fns";
-import { DayHeaderProps } from "./DayHeader";
 import CalendarHeaderMobile from "./CalendarHeader.Mobile";
 import CalendarHeaderDesktop from "./CalendarHeader.Desktop";
+import { generateWeekDays, getCurrentMonth } from "@/app/utils/dateHelpers";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -20,24 +19,8 @@ const CalendarHeader = ({
   onDaySelect,
   selectedDate,
 }: CalendarHeaderProps) => {
-  const generateWeekDays = (startDate: Date): DayHeaderProps[] => {
-    const days: DayHeaderProps[] = [];
-    const start = startOfWeek(startDate, { weekStartsOn: 0 });
-
-    for (let i = 0; i < 7; i++) {
-      const date = addDays(start, i);
-      days.push({
-        date: parseInt(format(date, "d")),
-        day: format(date, "EEE"),
-        isToday: isToday(date),
-        fullDate: date,
-      });
-    }
-    return days;
-  };
-
   const days = generateWeekDays(currentDate);
-  const currentMonth = format(currentDate, "MMMM yyyy");
+  const currentMonth = getCurrentMonth(currentDate);
 
   return (
     <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-4 rounded-lg">

@@ -9,10 +9,14 @@ import WeekView from "./calendar-event/WeekView";
 const MemoizedCalendarHeader = memo(CalendarHeader);
 const MemoizedWeekView = memo(WeekView);
 
-const CalendarClientContainer = () => {
-  const today = new Date();
-  const [currentDate, setCurrentDate] = useState(today);
-  const [selectedDate, setSelectedDate] = useState(today);
+interface CalendarClientContainerProps {
+  initialCurrentDate: Date;
+  initialSelectedDate: Date;
+}
+
+const CalendarClientContainer = ({ initialCurrentDate, initialSelectedDate }: CalendarClientContainerProps) => {
+  const [currentDate, setCurrentDate] = useState(initialCurrentDate);
+  const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
 
   // Memoized helper function to get the default selected date for a week
   const getDefaultSelectedDate = useMemo(() => {
